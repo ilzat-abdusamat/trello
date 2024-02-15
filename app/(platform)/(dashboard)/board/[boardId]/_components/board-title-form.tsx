@@ -7,6 +7,7 @@ import { Board } from '@prisma/client';
 import { FormInput } from '@/components/form/form-input';
 import { useAction } from '@/hooks/use-action';
 import { updateBoard } from '@/actions/update-board';
+import { deleteBoard } from '@/actions/delete-board';
 import { toast } from 'sonner';
 
 interface BoardTitleFormProps {
@@ -47,11 +48,16 @@ export const BoardTitleForm = ({ data }: BoardTitleFormProps) => {
   };
 
   const onSubmit = (formData: FormData) => {
-    const title = formData.get('title') as string;
-    execute({
-      title,
-      id: data.id,
-    });
+    const newTitle = formData.get('title') as string;
+    if (title === newTitle) {
+      disableEditing();
+      return;
+    } else {
+      execute({
+        title: newTitle,
+        id: data.id,
+      });
+    }
   };
 
   return (
