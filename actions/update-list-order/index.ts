@@ -1,0 +1,64 @@
+'use server';
+
+import { InputType, ReturnType } from './types';
+import { auth } from '@clerk/nextjs';
+import { db } from '@/lib/db';
+import { revalidatePath } from 'next/cache';
+import { createSafeAction } from '@/lib/create-safe-action';
+import { UpdateListOrder } from './schema';
+
+const handler = async (data: InputType): Promise<ReturnType> => {
+  const { userId, orgId } = auth();
+
+  if (!userId || !orgId) {
+    return {
+      error: 'Unauthorized',
+    };
+  }
+
+  const { boardId, items } = data;
+
+  let lists;
+
+  try {
+    const board = db.board.findUnique({
+      where: {
+        id: boardId,
+        orgId,
+      },
+    });
+
+    if (!board) {
+      return {
+        error: 'Board not found',
+      };
+    }
+
+    const transacion = items.map((list) =>
+      db.list.update({
+        where: {
+          id: list.id,
+          board: {
+            orgId,
+          },
+        },
+        data: {
+          order: list.order,
+        },
+      })
+    );
+
+    lists = await db.$transaction(transacion);
+  } catch (error) {
+    return {
+      error: 'Failed to reorder.',
+    };
+  }
+
+  revalidatePath(`board/${boardId}/`);
+  return {
+    data: lists,
+  };
+};
+
+export const updateListOrder = createSafeAction(UpdateListOrder, handler);
