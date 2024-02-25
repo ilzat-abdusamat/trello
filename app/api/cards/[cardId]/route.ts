@@ -21,7 +21,7 @@ export async function GET(request: Request, { params }: { params: { cardId: stri
       },
       include: {
         list: {
-          select: { title: true },
+          select: { title: true, boardId: true },
         },
       },
     });
