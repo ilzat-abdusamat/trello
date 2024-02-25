@@ -20,7 +20,7 @@ export const Header = ({ data }: HeaderProps) => {
 
   const inputRef = useRef<ElementRef<'input'>>(null);
 
-  const { execute } = useAction(updateCard, {
+  const { execute, fieldErrors } = useAction(updateCard, {
     onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: ['card', data.id],
@@ -59,6 +59,7 @@ export const Header = ({ data }: HeaderProps) => {
       <div className='w-full'>
         <form action={onSubmit}>
           <FormInput
+            errors={fieldErrors}
             ref={inputRef}
             onBlur={onBlur}
             id='title'

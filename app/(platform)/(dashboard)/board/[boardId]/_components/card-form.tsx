@@ -23,7 +23,7 @@ export const CardForm = forwardRef<HTMLTextAreaElement, CardFormProps>(
     const params = useParams();
     const formRef = useRef<ElementRef<'form'>>(null);
 
-    const onTextareakeyDown: KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
+    const onTextareaKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         formRef.current?.requestSubmit();
@@ -66,7 +66,7 @@ export const CardForm = forwardRef<HTMLTextAreaElement, CardFormProps>(
         >
           <FormTextarea
             id='title'
-            onKeyDown={onTextareakeyDown}
+            onKeyDown={onTextareaKeyDown}
             ref={ref}
             placeholder='Enter a title for this card...'
             errors={fieldErrors}
