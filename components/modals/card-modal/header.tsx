@@ -15,10 +15,9 @@ interface HeaderProps {
 
 export const Header = ({ data }: HeaderProps) => {
   const [title, setTitle] = useState(data.title);
+  const inputRef = useRef<ElementRef<'input'>>(null);
 
   const queryClient = useQueryClient();
-
-  const inputRef = useRef<ElementRef<'input'>>(null);
 
   const { execute, fieldErrors } = useAction(updateCard, {
     onSuccess: (data) => {
