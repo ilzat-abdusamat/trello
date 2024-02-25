@@ -21,7 +21,11 @@ export const Actions = ({ data }: ActionsProps) => {
 
   const { execute: executeCopyCard, isLoading: isLoadingCopy } = useAction(copyCard, {
     onSuccess: (data) => {
-      toast.success('Card copied');
+      toast.success(`Card "${data.title}" copied`);
+      cardModal.onClose();
+    },
+    onError: (error) => {
+      toast.error(error);
     },
   });
 
