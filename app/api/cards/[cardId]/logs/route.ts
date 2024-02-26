@@ -5,9 +5,9 @@ import { NextResponse } from 'next/server';
 
 export async function GET(request: Request, { params }: { params: { cardId: string } }) {
   try {
-    const { user, orgId } = auth();
+    const { userId, orgId } = auth();
 
-    if (!user || !orgId) {
+    if (!userId || !orgId) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
@@ -22,6 +22,8 @@ export async function GET(request: Request, { params }: { params: { cardId: stri
       },
       take: 3,
     });
+
+    console.log('auditLogs', auditLogs);
 
     return NextResponse.json(auditLogs);
   } catch (error) {
