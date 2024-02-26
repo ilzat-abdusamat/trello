@@ -6,6 +6,8 @@ import { InputType, ReturnType } from './types';
 import { auth } from '@clerk/nextjs';
 import { db } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
+import { CreateAuditLog } from '@/lib/create-audit-log';
+import { ACTION, ENTITY_TYPE } from '@prisma/client';
 
 const handler = async (validatedData: InputType): Promise<ReturnType> => {
   const { userId, orgId } = auth();
@@ -72,6 +74,13 @@ const handler = async (validatedData: InputType): Promise<ReturnType> => {
       error: 'Failed to copy.',
     };
   }
+
+  await CreateAuditLog({
+    entityId: list.id,
+    entityType: ENTITY_TYPE.LIST,
+    entityTitle: list.title,
+    action: ACTION.CREATE,
+  });
 
   revalidatePath(`/board/${boardId}`);
 

@@ -1,11 +1,16 @@
 'use server';
 
+import { auth } from '@clerk/nextjs';
+import { revalidatePath } from 'next/cache';
+
+import { CreateAuditLog } from '@/lib/create-audit-log';
+import { ACTION, ENTITY_TYPE } from '@prisma/client';
+
+import { db } from '@/lib/db';
 import { createSafeAction } from '@/lib/create-safe-action';
+
 import { CopyCard } from './schema';
 import { InputType, ReturnType } from './types';
-import { auth } from '@clerk/nextjs';
-import { db } from '@/lib/db';
-import { revalidatePath } from 'next/cache';
 
 const handler = async (validatedData: InputType): Promise<ReturnType> => {
   const { userId, orgId } = auth();
@@ -53,6 +58,13 @@ const handler = async (validatedData: InputType): Promise<ReturnType> => {
         order: newOrder,
         listId: cardToCopy.listId,
       },
+    });
+
+    await CreateAuditLog({
+      entityId: card.id,
+      entityType: ENTITY_TYPE.CARD,
+      entityTitle: card.title,
+      action: ACTION.CREATE,
     });
   } catch (error) {
     return {

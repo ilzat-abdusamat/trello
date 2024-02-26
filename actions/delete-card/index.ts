@@ -6,6 +6,8 @@ import { InputType, ReturnType } from './types';
 import { auth } from '@clerk/nextjs';
 import { db } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
+import { CreateAuditLog } from '@/lib/create-audit-log';
+import { ACTION, ENTITY_TYPE } from '@prisma/client';
 
 const handler = async (validatedData: InputType): Promise<ReturnType> => {
   const { userId, orgId } = auth();
@@ -25,6 +27,13 @@ const handler = async (validatedData: InputType): Promise<ReturnType> => {
       where: {
         id,
       },
+    });
+
+    await CreateAuditLog({
+      entityId: card.id,
+      entityType: ENTITY_TYPE.CARD,
+      entityTitle: card.title,
+      action: ACTION.DELETE,
     });
   } catch (error) {
     return {

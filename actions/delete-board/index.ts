@@ -7,6 +7,8 @@ import { auth } from '@clerk/nextjs';
 import { db } from '@/lib/db';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
+import { CreateAuditLog } from '@/lib/create-audit-log';
+import { ACTION, ENTITY_TYPE } from '@prisma/client';
 
 const handler = async (validatedData: InputType): Promise<ReturnType> => {
   const { userId, orgId } = auth();
@@ -25,6 +27,13 @@ const handler = async (validatedData: InputType): Promise<ReturnType> => {
         id,
         orgId,
       },
+    });
+
+    await CreateAuditLog({
+      entityId: board.id,
+      entityType: ENTITY_TYPE.BOARD,
+      entityTitle: board.title,
+      action: ACTION.DELETE,
     });
   } catch (error) {
     return {

@@ -29,8 +29,6 @@ export const CardModal = () => {
     },
   });
 
-  console.log('auditLogsData', auditLogsData);
-
   return (
     <Dialog
       open={isOpen}
