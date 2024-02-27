@@ -9,6 +9,7 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { CreateAuditLog } from '@/lib/create-audit-log';
 import { ACTION, ENTITY_TYPE } from '@prisma/client';
+import { decreaseAvailableCount } from '@/lib/org-limit';
 
 const handler = async (validatedData: InputType): Promise<ReturnType> => {
   const { userId, orgId } = auth();
@@ -35,6 +36,8 @@ const handler = async (validatedData: InputType): Promise<ReturnType> => {
       entityTitle: board.title,
       action: ACTION.DELETE,
     });
+
+    await decreaseAvailableCount();
   } catch (error) {
     return {
       error: 'Failed to delete.',

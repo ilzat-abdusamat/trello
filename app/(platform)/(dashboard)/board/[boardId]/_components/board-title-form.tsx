@@ -7,7 +7,6 @@ import { Board } from '@prisma/client';
 import { FormInput } from '@/components/form/form-input';
 import { useAction } from '@/hooks/use-action';
 import { updateBoard } from '@/actions/update-board';
-import { deleteBoard } from '@/actions/delete-board';
 import { toast } from 'sonner';
 
 interface BoardTitleFormProps {

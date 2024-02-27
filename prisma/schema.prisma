@@ -86,7 +86,7 @@ model AuditLog {
 
 model OrgnizationLimit {
   id    String @id @default(uuid())
-  orgId String
+  orgId String @unique
   count Int
 
   createdAt DateTime @default(now())
