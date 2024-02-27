@@ -81,5 +81,14 @@ model AuditLog {
   userName    String      @db.Text
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrgnizationLimit {
+  id    String @id @default(uuid())
+  orgId String
+  count Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
