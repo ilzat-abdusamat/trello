@@ -23,8 +23,6 @@ export async function GET(request: Request, { params }: { params: { cardId: stri
       take: 3,
     });
 
-    console.log('auditLogs', auditLogs);
-
     return NextResponse.json(auditLogs);
   } catch (error) {
     return new NextResponse('Internal Error', {
