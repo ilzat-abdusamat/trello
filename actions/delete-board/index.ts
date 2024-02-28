@@ -10,9 +10,12 @@ import { revalidatePath } from 'next/cache';
 import { CreateAuditLog } from '@/lib/create-audit-log';
 import { ACTION, ENTITY_TYPE } from '@prisma/client';
 import { decreaseAvailableCount } from '@/lib/org-limit';
+import { checkSubscription } from '@/lib/subscription';
 
 const handler = async (validatedData: InputType): Promise<ReturnType> => {
   const { userId, orgId } = auth();
+
+  const isPro = await checkSubscription();
 
   if (!userId || !orgId) {
     return {
@@ -30,14 +33,16 @@ const handler = async (validatedData: InputType): Promise<ReturnType> => {
       },
     });
 
+    if (!isPro) {
+      await decreaseAvailableCount();
+    }
+
     await CreateAuditLog({
       entityId: board.id,
       entityType: ENTITY_TYPE.BOARD,
       entityTitle: board.title,
       action: ACTION.DELETE,
     });
-
-    await decreaseAvailableCount();
   } catch (error) {
     return {
       error: 'Failed to delete.',

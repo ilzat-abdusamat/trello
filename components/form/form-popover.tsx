@@ -12,6 +12,7 @@ import { PopoverClose } from '@radix-ui/react-popover';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useProModal } from '@/hooks/use-pro-modal';
 
 interface FormPopoverProps {
   children: React.ReactNode;
@@ -28,6 +29,7 @@ export const FormPopover = ({
 }: FormPopoverProps) => {
   const closeRef = useRef<ElementRef<'button'>>(null);
   const router = useRouter();
+  const proModal = useProModal();
 
   const { execute, fieldErrors } = useAction(createBoard, {
     onSuccess: (data) => {
@@ -37,6 +39,7 @@ export const FormPopover = ({
     },
     onError: (error) => {
       toast.error(error);
+      proModal.onOpen();
     },
   });
 

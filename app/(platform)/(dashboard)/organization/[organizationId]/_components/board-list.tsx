@@ -27,7 +27,7 @@ export const BoardList = async () => {
     },
   });
 
-  const availbleCount = await getAvailableCount();
+  const availableCount = await getAvailableCount();
   const isPro = await checkSubscription();
 
   return (
@@ -58,7 +58,7 @@ export const BoardList = async () => {
           >
             <p className='text-sm'>Create new board</p>
             <span className='text-xs'>
-              {isPro ? 'Unlimited' : `${MAX_FREE_BOARDS - availbleCount} remaining`}
+              {isPro ? 'Unlimited' : `${MAX_FREE_BOARDS - availableCount} remaining`}
             </span>
             <Hint
               sideOffset={40}
